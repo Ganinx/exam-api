@@ -32,6 +32,7 @@ use Symfony\Component\Serializer\Attribute\Groups;
         denormalizationContext: ['groups'=>['modif']],
         name: 'modif')
 ])]
+#[UniqueEntity(fields: ["username"],message: "deja un username")]
 #[ORM\Entity(repositoryClass: EmployeRepository::class)]
 class Employe implements UserInterface, PasswordAuthenticatedUserInterface
 {
