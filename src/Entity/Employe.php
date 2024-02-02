@@ -8,6 +8,7 @@ use ApiPlatform\Metadata\Get;
 use ApiPlatform\Metadata\GetCollection;
 use ApiPlatform\Metadata\Post;
 use ApiPlatform\Metadata\Put;
+use App\Controller\ModifController;
 use App\Controller\RegisterController;
 use App\Repository\EmployeRepository;
 use Doctrine\ORM\Mapping as ORM;
@@ -17,7 +18,6 @@ use Symfony\Component\Serializer\Attribute\Groups;
 
 #[ApiResource(paginationItemsPerPage: 10)]
 #[Get(security: "is_granted('IS_AUTHENTICATED_FULLY')")]
-#[Put(security: "is_granted('ROLE_ADMIN')")]
 #[Delete(security: "is_granted('ROLE_ADMIN')")]
 #[GetCollection(security: "is_granted('IS_AUTHENTICATED_FULLY')")]
 #[ApiResource(operations: [
@@ -25,9 +25,13 @@ use Symfony\Component\Serializer\Attribute\Groups;
     uriTemplate: '/api/register',
     controller: RegisterController::class,
     denormalizationContext: ['groups'=>['register']],
-    name: 'register'
-
-)])]
+    name: 'register'),
+    new Put(
+        uriTemplate: '/api/modif/{id}',
+        controller: ModifController::class,
+        denormalizationContext: ['groups'=>['modif']],
+        name: 'modif')
+])]
 #[ORM\Entity(repositoryClass: EmployeRepository::class)]
 class Employe implements UserInterface, PasswordAuthenticatedUserInterface
 {
@@ -36,15 +40,15 @@ class Employe implements UserInterface, PasswordAuthenticatedUserInterface
     #[ORM\Column]
     private ?int $id = null;
 
-    #[Groups(['register'])]
+    #[Groups(['register','modif'])]
     #[ORM\Column(length: 180, unique: true)]
     private ?string $username = null;
 
-    #[Groups(['register'])]
+    #[Groups(['register','modif'])]
     #[ORM\Column(length: 180)]
     private ?string $prenom = null;
 
-    #[Groups(['register'])]
+    #[Groups(['register','modif'])]
     #[ORM\Column(length: 180)]
     private ?string $nom = null;
 
@@ -74,7 +78,7 @@ class Employe implements UserInterface, PasswordAuthenticatedUserInterface
     /**
      * @var string The hashed password
      */
-    #[Groups(['register'])]
+    #[Groups(['register','modif'])]
     #[ORM\Column]
     private ?string $password = null;
 
