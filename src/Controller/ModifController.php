@@ -37,6 +37,10 @@ class ModifController extends AbstractController
     public function __invoke(Employe $employe): Employe
     {
         $employe->setPassword($this->hasher->hashPassword($employe, $employe->getPassword()));
+        $employe->setUsername($employe->getUsername());
+        $employe->setNom($employe->getNom());
+        $employe->setPrenom($employe->getPrenom());
+        $employe->setRoles(['ROLE_USER']);
         $this->validator->validate($employe);
         $this->em->persist($employe);
         $this->em->flush();

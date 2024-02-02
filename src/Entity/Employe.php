@@ -11,7 +11,10 @@ use ApiPlatform\Metadata\Put;
 use App\Controller\ModifController;
 use App\Controller\RegisterController;
 use App\Repository\EmployeRepository;
+use App\State\UserPasswordHasher;
 use Doctrine\ORM\Mapping as ORM;
+use Symfony\Bridge\Doctrine\Validator\Constraints\UniqueEntity;
+use Symfony\Component\PasswordHasher\Hasher\UserPasswordHasherInterface;
 use Symfony\Component\Security\Core\User\PasswordAuthenticatedUserInterface;
 use Symfony\Component\Security\Core\User\UserInterface;
 use Symfony\Component\Serializer\Attribute\Groups;
@@ -27,14 +30,14 @@ use Symfony\Component\Serializer\Attribute\Groups;
     denormalizationContext: ['groups'=>['register']],
     name: 'register'),
     new Put(
-        uriTemplate: '/api/modif/{id}',
-        controller: ModifController::class,
+        uriTemplate: '/modif/{id}',
+        processor: UserPasswordHasher::class,
         denormalizationContext: ['groups'=>['modif']],
-        name: 'modif')
+        )
 ])]
-#[UniqueEntity(fields: ["username"],message: "deja un username")]
+
 #[ORM\Entity(repositoryClass: EmployeRepository::class)]
-class Employe implements UserInterface, PasswordAuthenticatedUserInterface
+class Employe implements UserInterface,PasswordAuthenticatedUserInterface
 {
     #[ORM\Id]
     #[ORM\GeneratedValue]
